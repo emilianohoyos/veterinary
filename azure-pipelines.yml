@@ -5,8 +5,10 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  proyecto: Veterinary.API/Veterinary.API.csproj
+  proyecto: 'Veterinary.APi/Veterinary.API.csproj' # Corregido con la i minúscula
 
 steps:
 - task: UseDotNet@2
@@ -16,7 +18,13 @@ steps:
     version: '8.0.403'
     includePreviewVersions: true
 
-- script: dotnet build --configuration $(buildConfiguration) 'Veterinary.API/Veterinary.API.csproj'
+- task: DotNetCoreCLI@2
+  displayName: 'Restore dependencies'
+  inputs:
+    command: 'restore'
+    projects: '$(proyecto)'
+
+- script: dotnet build --configuration $(buildConfiguration) '$(proyecto)' --verbosity detailed
   displayName: 'dotnet build $(buildConfiguration)'
 
 - task: CmdLine@2
