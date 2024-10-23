@@ -5,11 +5,16 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  proyecto: 'Veterinary.API/Veterinary.API.csproj' # Ruta corregida
+  proyecto: 'Veterinary.API/Veterinary.API.csproj'
 
 steps:
-- checkout: self # Asegura que el repositorio se clone correctamente
+- checkout: self # Asegúrate de clonar el repositorio
+
+- script: dir D:\a\1\s
+  displayName: 'List contents of the working directory' # Verifica el contenido del directorio
 
 - task: UseDotNet@2
   displayName: 'ASP.NET Core 8'
@@ -25,30 +30,5 @@ steps:
     projects: '$(proyecto)'
 
 - script: dotnet build --configuration $(buildConfiguration) '$(proyecto)' --verbosity detailed
-  workingDirectory: $(System.DefaultWorkingDirectory) # Asegúrate de que estás en el directorio raíz
+  workingDirectory: D:\a\1\s
   displayName: 'dotnet build $(buildConfiguration)'
-
-- task: CmdLine@2
-  displayName: 'Installing EF Core CLI'
-  inputs:
-    script: 'dotnet tool install --global dotnet-ef --version 8.*'
-
-- task: CmdLine@2
-  displayName: 'Generating DB script'
-  inputs:
-    script: 'dotnet ef migrations script -i -o $(Build.ArtifactStagingDirectory)\migrate.sql --project "$(proyecto)"'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Publishing App .NET Project...'
-  inputs:
-    command: 'publish'
-    publishWebProjects: false
-    projects: '$(proyecto)'
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: false
-    modifyOutputPath: false
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: drop
