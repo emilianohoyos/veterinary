@@ -11,6 +11,8 @@ variables:
   proyecto: 'Veterinary.API/Veterinary.API.csproj' # Ruta corregida
 
 steps:
+- checkout: self # Asegura que el repositorio se clone correctamente
+
 - task: UseDotNet@2
   displayName: 'ASP.NET Core 8'
   inputs:
@@ -25,6 +27,7 @@ steps:
     projects: '$(proyecto)'
 
 - script: dotnet build --configuration $(buildConfiguration) '$(proyecto)' --verbosity detailed
+  workingDirectory: $(System.DefaultWorkingDirectory) # Asegúrate de que estás en el directorio raíz
   displayName: 'dotnet build $(buildConfiguration)'
 
 - task: CmdLine@2
