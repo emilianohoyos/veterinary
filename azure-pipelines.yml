@@ -11,10 +11,13 @@ variables:
   proyecto: 'Veterinary.API/Veterinary.API.csproj'
 
 steps:
-- checkout: self # Asegúrate de clonar el repositorio
+- checkout: self
 
 - script: dir D:\a\1\s
-  displayName: 'List contents of the working directory' # Verifica el contenido del directorio
+  displayName: 'List contents of the working directory'
+
+- script: dir D:\a\1\s\Veterinary.API
+  displayName: 'List contents of the Veterinary.API directory' # Verificar contenido de Veterinary.API
 
 - task: UseDotNet@2
   displayName: 'ASP.NET Core 8'
