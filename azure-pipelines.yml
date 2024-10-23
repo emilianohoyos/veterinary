@@ -6,7 +6,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  proyecto: 'Veterinary.API/Veterinary.API.csproj' # Corregido con la i minúscula
+  proyecto: 'Veterinary.API/Veterinary.API.csproj'
 
 steps:
 - task: UseDotNet@2
