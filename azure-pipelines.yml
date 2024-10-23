@@ -6,7 +6,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  proyecto: 'Veterinary.API/Veterinary.API.csproj'
+  proyecto: Veterinary.API/Veterinary.API.csproj
 
 steps:
 - task: UseDotNet@2
@@ -22,7 +22,7 @@ steps:
     command: 'restore'
     projects: '$(proyecto)'
 
-- script: dotnet build --configuration $(buildConfiguration) '$(proyecto)' --verbosity detailed
+- script: dotnet build --configuration $(buildConfiguration) Veterinary.API/Veterinary.API.csproj
   displayName: 'dotnet build $(buildConfiguration)'
 
 - task: CmdLine@2
