@@ -5,8 +5,10 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  proyecto: Veterinary.API/Veterinary.API.csproj
+  proyecto: 'Veterinary.API/Veterinary.API.csproj' # Ruta corregida
 
 steps:
 - task: UseDotNet@2
@@ -22,7 +24,7 @@ steps:
     command: 'restore'
     projects: '$(proyecto)'
 
-- script: dotnet build --configuration $(buildConfiguration) Veterinary.API/Veterinary.API.csproj
+- script: dotnet build --configuration $(buildConfiguration) '$(proyecto)' --verbosity detailed
   displayName: 'dotnet build $(buildConfiguration)'
 
 - task: CmdLine@2
