@@ -5,10 +5,8 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  proyecto: Veterinary.APi/Veterinary.API.csproj
+  proyecto: Veterinary.API/Veterinary.API.csproj
 
 steps:
 - task: UseDotNet@2
@@ -18,7 +16,7 @@ steps:
     version: '8.0.403'
     includePreviewVersions: true
 
-- script: dotnet build --configuration $(buildConfiguration) 'Veterinary.APi/Veterinary.API.csproj'
+- script: dotnet build --configuration $(buildConfiguration) 'Veterinary.API/Veterinary.API.csproj'
   displayName: 'dotnet build $(buildConfiguration)'
 
 - task: CmdLine@2
