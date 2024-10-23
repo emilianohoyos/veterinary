@@ -8,16 +8,10 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  proyecto: 'Veterinary.API/Veterinary.API.csproj'
+  proyecto: '$(System.DefaultWorkingDirectory)\Veterinary.API\Veterinary.API.csproj' # Usar backslashes para Windows
 
 steps:
 - checkout: self
-
-- script: git ls-files
-  displayName: 'List all tracked files in the repo' # Verificar si el archivo está siendo rastreado
-
-- script: dir D:\a\1\s\Veterinary.API
-  displayName: 'List contents of the Veterinary.API directory' # Verificar nuevamente el contenido
 
 - task: UseDotNet@2
   displayName: 'ASP.NET Core 8'
@@ -30,7 +24,7 @@ steps:
   displayName: 'Restore dependencies'
   inputs:
     command: 'restore'
-    projects: '$(System.DefaultWorkingDirectory)/Veterinary.API/Veterinary.API.csproj' # Usar ruta absoluta
+    projects: '$(proyecto)'
 
-- script: dotnet build --configuration $(buildConfiguration) '$(System.DefaultWorkingDirectory)/Veterinary.API/Veterinary.API.csproj' --verbosity detailed
+- script: dotnet build --configuration $(buildConfiguration) '$(proyecto)' --verbosity detailed
   displayName: 'dotnet build $(buildConfiguration)'
