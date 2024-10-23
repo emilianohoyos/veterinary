@@ -13,11 +13,11 @@ variables:
 steps:
 - checkout: self
 
-- script: dir D:\a\1\s
-  displayName: 'List contents of the working directory'
+- script: git ls-files
+  displayName: 'List all tracked files in the repo' # Verificar si el archivo está siendo rastreado
 
 - script: dir D:\a\1\s\Veterinary.API
-  displayName: 'List contents of the Veterinary.API directory' # Verificar contenido de Veterinary.API
+  displayName: 'List contents of the Veterinary.API directory' # Verificar nuevamente el contenido
 
 - task: UseDotNet@2
   displayName: 'ASP.NET Core 8'
@@ -30,8 +30,7 @@ steps:
   displayName: 'Restore dependencies'
   inputs:
     command: 'restore'
-    projects: '$(proyecto)'
+    projects: '$(System.DefaultWorkingDirectory)/Veterinary.API/Veterinary.API.csproj' # Usar ruta absoluta
 
-- script: dotnet build --configuration $(buildConfiguration) '$(proyecto)' --verbosity detailed
-  workingDirectory: D:\a\1\s
+- script: dotnet build --configuration $(buildConfiguration) '$(System.DefaultWorkingDirectory)/Veterinary.API/Veterinary.API.csproj' --verbosity detailed
   displayName: 'dotnet build $(buildConfiguration)'
