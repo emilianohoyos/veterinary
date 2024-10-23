@@ -8,10 +8,13 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  proyecto: '$(System.DefaultWorkingDirectory)\Veterinary.API\Veterinary.API.csproj' # Usar backslashes para Windows
+  proyecto: 'Veterinary.API/Veterinary.API.csproj' # Usar ruta relativa
 
 steps:
 - checkout: self
+
+- script: dir D:\a\1\s\Veterinary.API
+  displayName: 'Verify Veterinary.API directory before build' # Verificar contenido antes de la compilación
 
 - task: UseDotNet@2
   displayName: 'ASP.NET Core 8'
