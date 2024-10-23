@@ -5,8 +5,6 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   proyecto: 'Veterinary.API/Veterinary.API.csproj' # Ruta corregida
 
