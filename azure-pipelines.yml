@@ -1,3 +1,9 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+# Para cuentas gratis el runtime de app service azure en el script del pipeline CI debe ser --runtime win-x86
+
 trigger:
 - main
 
@@ -5,35 +11,35 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  proyecto: Veterinary.API/Veterinary.API.csproj # Usar ruta relativa
-
+  proyecto: Veterinary.API/Veterinary.API.csproj
 steps:
-- checkout: self
-
-- script: dir D:\a\1\s\Veterinary.API
-  displayName: 'Verify Veterinary.API directory before build' # Verificar contenido antes de la compilación
-
 - task: UseDotNet@2
   displayName: 'ASP.NET Core 8'
   inputs:
     packageType: 'sdk'
     version: '8.0.403'
     includePreviewVersions: true
-
-- task: DotNetCoreCLI@2
-  displayName: 'Restore dependencies'
-  inputs:
-    command: 'restore'
-    projects: '$(proyecto)'
-
-- script: dotnet build --configuration $(buildConfiguration) '$(proyecto)' --verbosity detailed
+- script: dotnet build --configuration $(buildConfiguration) Veterinary.API/Veterinary.API.csproj
   displayName: 'dotnet build $(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Restore dependencies'
+- task: CmdLine@2
+  displayName: 'Installing EF Core CLI'
   inputs:
-    command: 'restore'
-    projects: '$(proyecto)'
+    script: 'dotnet tool install --global dotnet-ef --version 8.*'
+- task: CmdLine@2
+  displayName: 'Generating DB script'
+  inputs:
+    script: 'dotnet ef migrations script -i -o $(Build.ArtifactStagingDirectory)\migrate.sql --project $(proyecto)'
+- task: DotNetCoreCLI@2
+  displayName: 'Publishing App...'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: $(proyecto)
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory) --runtime win-x86 --self-contained true'
+    zipAfterPublish: false
+    modifyOutputPath: false
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: drop
